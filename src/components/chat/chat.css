@@ -74,7 +74,7 @@
 
       .texts {
         p {
-          background-color: #5183fe;
+          background-color: rgb(50, 103, 238);
           /* padding: 10px;
           border-radius: 10px; */
         }
@@ -147,12 +147,17 @@
     }
 
     .sendButton {
-      background-color: #205cf1;
+      background-color: rgba(32, 91, 241, 0.829);
       border: none;
       padding: 10px 20px;
       border-radius: 5px;
       color: white;
       cursor: pointer;
+
+      &:hover {
+        background-color: rgba(32, 91, 241, 0.993);
+
+      }
     }
 
     .emoji {

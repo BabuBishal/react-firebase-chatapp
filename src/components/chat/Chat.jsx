@@ -2,16 +2,20 @@ import { forwardRef, useRef, useState, useEffect } from "react";
 import "./chat.css";
 import EmojiPicker from "emoji-picker-react";
 
-
 const Chat = () => {
   const [message, setMessage] = useState("");
   const [openEmoji, setOpenEmoji] = useState(false);
   const pickerRef = useRef(null);
+  const endRef = useRef(null);
 
   const handleEmoji = (e) => {
     setMessage((prev) => prev + e.emoji);
   };
-    
+  
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (pickerRef.current && !pickerRef.current.contains(event.target)) {
@@ -53,26 +57,39 @@ const Chat = () => {
         <div className="message">
           <img src="./avatar.png" alt="" />
           <div className="texts">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, repellendus.</p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Molestiae, repellendus.
+            </p>
             <span>1 min ago</span>
           </div>
         </div>
         <div className="message own">
           {/* <img src="./avatar.png" alt="" /> */}
           <div className="texts">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, repellendus.</p>
-            
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Molestiae, repellendus.
+            </p>
+
             <span>1 min ago</span>
           </div>
         </div>
         <div className="message">
           <img src="./avatar.png" alt="" />
           <div className="texts">
-            <img src="https://images.pexels.com/photos/6243239/pexels-photo-6243239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, repellendus.</p>
+            <img
+              src="https://images.pexels.com/photos/6243239/pexels-photo-6243239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              alt=""
+            />
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Molestiae, repellendus.
+            </p>
             <span>1 min ago</span>
           </div>
         </div>
+        <div ref={endRef}></div>
       </div>
       <div className="bottom">
         <div className="icons">
@@ -92,8 +109,8 @@ const Chat = () => {
             alt=""
             onClick={() => setOpenEmoji((prev) => !prev)}
           />
-        {openEmoji && (
-            <div className="picker" ref={pickerRef} >
+          {openEmoji && (
+            <div className="picker" ref={pickerRef}>
               <EmojiPicker onEmojiClick={handleEmoji} />
             </div>
           )}
