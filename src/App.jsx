@@ -4,6 +4,7 @@ import Detail from './components/detail/Detail'
 import List from './components/list/List'
 import './index.css'
 import Login from './components/login/Login'
+import Notification from './components/notification/Notification'
 
 const App = () => {
 const [isUser, setIsUser] = useState(false)
@@ -18,6 +19,7 @@ const [isUser, setIsUser] = useState(false)
       ) : 
       <Login />
       }
+      <Notification />
     </div>
   )
 }

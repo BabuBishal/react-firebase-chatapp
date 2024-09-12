@@ -3,7 +3,9 @@ import "react-toastify/dist/ReactToastify.css"
 
 const Notification = () => {
   return (
-    <div>Notification</div>
+    <div>
+        <ToastContainer position="bottom-right" autoClose={4000} closeOnClick/>
+    </div>
   )
 }
 
