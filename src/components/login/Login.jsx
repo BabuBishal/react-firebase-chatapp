@@ -65,7 +65,7 @@ const Login = () => {
         blocked: [],
       });
 
-      console.log("Account created successfully.");
+      console.log("Account created successfully. You can log in now.");
 
       toast.success("Account created successfully.");
     } catch (err) {
@@ -84,7 +84,8 @@ const Login = () => {
           <input type="text" placeholder="Email" name="email" />
           <input type="password" placeholder="Password" name="password" />
           <button disabled={loading} className="login">
-            {loading ? "Loading" : "Sign In"}
+            {/* {loading ? "Loading" : "Sign In"} */}
+            Sign In
           </button>
         </form>
       </div>
@@ -108,7 +109,8 @@ const Login = () => {
           <input type="text" placeholder="Email" name="email" />
           <input type="password" placeholder="Password" name="password" />
           <button disabled={loading} className="signup">
-            {loading ? "Loading" : "Sign Up"}
+            {/* {loading ? "Loading" : "Sign Up"} */}
+            Sign Up
           </button>
         </form>
       </div>

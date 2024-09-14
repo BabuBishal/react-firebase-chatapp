@@ -1,11 +1,16 @@
+import { auth } from "../../lib/firebase";
+import { useUserStore } from "../../lib/userStore";
 import "./detail.css";
 
 const Detail = () => {
+
+  const { currentUser } = useUserStore();
+
   return (
     <div className="detail">
       <div className="user">
-        <img src="./avatar.png" alt="" />
-        <h2>Bishal</h2>
+        <img src={currentUser.avatar || "./avatar.png"} alt="" />
+        <h2>{currentUser.username}</h2>
         <p>Lorem ipsum dolor sit amet.</p>
       </div>
       <div className="info">
@@ -54,7 +59,7 @@ const Detail = () => {
       </div>
          <div className="buttons">
          <button>Block User</button>
-         <button className="logout">Log Out</button>
+         <button className="logout" onClick={() => auth.signOut()}>Log Out</button>
          </div>
     </div>
   );
