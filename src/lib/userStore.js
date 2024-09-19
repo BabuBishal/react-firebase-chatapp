@@ -22,7 +22,7 @@ export const useUserStore = create((set) => ({
           console.log("No such document!");
         }
     } catch(err) {
-        console.log(err)
+        console.log(err);
         return set({currentUser: null, isLoading: false})
     }
   }
