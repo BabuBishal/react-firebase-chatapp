@@ -144,6 +144,10 @@
       border-radius: 10px;
       font-size: 16px;
       letter-spacing: 1px;
+
+      &:disabled{
+        cursor: not-allowed;
+      }
     }
 
     .sendButton {
@@ -156,6 +160,11 @@
 
       &:hover {
         background-color: rgba(32, 91, 241, 0.993);
+      }
+
+      &:disabled{
+      background-color: rgba(32, 91, 241, 0.717);
+      cursor: not-allowed;
 
       }
     }

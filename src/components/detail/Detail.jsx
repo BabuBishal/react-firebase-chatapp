@@ -74,7 +74,8 @@ const Detail = () => {
 
       </div>
          <div className="buttons">
-         <button onClick={handleBlock}>Block User</button>
+         <button onClick={handleBlock}>{
+          isCurrentUserBlocked ? "You are blocked!" : isReceiverBlocked ? "User Blocked" : "Block User"}</button>
          <button className="logout" onClick={() => auth.signOut()}>Log Out</button>
          </div>
     </div>

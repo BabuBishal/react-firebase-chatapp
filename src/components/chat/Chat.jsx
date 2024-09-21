@@ -1,7 +1,13 @@
 import { forwardRef, useRef, useState, useEffect } from "react";
 import "./chat.css";
 import EmojiPicker from "emoji-picker-react";
-import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
 import { useUserStore } from "../../lib/userStore";
@@ -19,7 +25,8 @@ const Chat = () => {
   const pickerRef = useRef(null);
   const endRef = useRef(null);
 
-  const { chatId, user } = useChatStore();
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } =
+    useChatStore();
   const { currentUser } = useUserStore();
 
   const handleEmoji = (e) => {
@@ -38,12 +45,9 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    const unSub = onSnapshot(
-      doc(db, "chats", chatId),
-      (res) => {
-        setChat(res.data());
-      }
-    );
+    const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+      setChat(res.data());
+    });
     return () => {
       unSub();
     };
@@ -74,12 +78,11 @@ const Chat = () => {
   }, [openEmoji]);
 
   const handleSend = async () => {
-    if(text === "") return;
+    if (text === "") return;
 
     let imgUrl = null;
 
-    try{
-
+    try {
       if (img.file) {
         imgUrl = await upload(img.file);
       }
@@ -89,35 +92,34 @@ const Chat = () => {
           senderId: currentUser.id,
           text,
           createdAt: new Date(),
-          ...(imgUrl && {img: imgUrl})
+          ...(imgUrl && { img: imgUrl }),
         }),
       });
-      
+
       const userIds = [currentUser.id, user.id];
 
-      userIds.forEach(async( id ) => {
-        
+      userIds.forEach(async (id) => {
         const userChatsRef = doc(db, "userchats", id);
-        const userChatSnapshot = await getDoc(userChatsRef)
-         
-        if (userChatSnapshot.exists()){
+        const userChatSnapshot = await getDoc(userChatsRef);
+
+        if (userChatSnapshot.exists()) {
           const userChatsData = userChatSnapshot.data();
           const chatIndex = userChatsData.chats.findIndex(
             (c) => c.chatId === chatId
-          )
-          
-          userChatsData.chats[chatIndex].isSeen = id === currentUser.id ? true : false;
+          );
+
+          userChatsData.chats[chatIndex].isSeen =
+            id === currentUser.id ? true : false;
           userChatsData.chats[chatIndex].lastMessage = text;
-          userChatsData.chats[chatIndex].updatedAt = Date.now(); 
-          
+          userChatsData.chats[chatIndex].updatedAt = Date.now();
+
           await updateDoc(userChatsRef, {
             chats: userChatsData.chats,
-          })
-      }
-        })
-
-    } catch(err) {
-      console.log(err)
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
     }
 
     setImg({
@@ -126,7 +128,7 @@ const Chat = () => {
     });
 
     setText("");
-  }
+  };
 
   return (
     <div className="chat">
@@ -145,46 +147,61 @@ const Chat = () => {
         </div>
       </div>
       <div className="center">
-        
         {chat?.messages.map((message) => (
-          <div className={message.senderId === currentUser?.id ? "message own" : "message"} key={message?.createdAt}>
-          {/* <img src="./avatar.png" alt="" /> */}
-          <div className="texts">
-            {message.img && <img
-              src="https://images.pexels.com/photos/6243239/pexels-photo-6243239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              alt=""
-            />}
-            <p>
-              {message.text}
-            </p>
-            {/* <span>1 min ago</span> */}
+          <div
+            className={
+              message.senderId === currentUser?.id ? "message own" : "message"
+            }
+            key={message?.createdAt}
+          >
+            {/* <img src="./avatar.png" alt="" /> */}
+            <div className="texts">
+              {message.img && (
+                <img
+                  src="https://images.pexels.com/photos/6243239/pexels-photo-6243239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  alt=""
+                />
+              )}
+              <p>{message.text}</p>
+              {/* <span>1 min ago</span> */}
+            </div>
           </div>
-        </div>
         ))}
 
-        {img.url && <div className="message own">
-          <div className="texts">
-            <img src={img.url} alt="" />
+        {img.url && (
+          <div className="message own">
+            <div className="texts">
+              <img src={img.url} alt="" />
+            </div>
           </div>
-        </div>}
-        
+        )}
+
         <div ref={endRef}></div>
       </div>
       <div className="bottom">
         <div className="icons">
           <label htmlFor="file">
-
-          <img src="./img.png" alt="" />
+            <img src="./img.png" alt="" />
           </label>
-          <input type="file" id="file" style={{ display: "none"}} onChange={handleImg} />
+          <input
+            type="file"
+            id="file"
+            style={{ display: "none" }}
+            onChange={handleImg}
+          />
           <img src="./camera.png" alt="" />
           <img src="./mic.png" alt="" />
         </div>
         <input
           type="text"
-          placeholder="Type a message..."
+          placeholder={
+            isCurrentUserBlocked || isReceiverBlocked
+              ? "You cannot send a message"
+              : "Type a message..."
+          }
           value={text}
           onChange={(e) => setText(e.target.value)}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
         />
         <div className="emoji">
           <img
@@ -198,7 +215,13 @@ const Chat = () => {
             </div>
           )}
         </div>
-        <button className="sendButton" onClick={handleSend} >Send</button>
+        <button
+          className="sendButton"
+          onClick={handleSend}
+          disabled={isCurrentUserBlocked || isReceiverBlocked}
+        >
+          Send
+        </button>
       </div>
     </div>
   );
