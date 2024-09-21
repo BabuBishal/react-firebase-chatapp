@@ -8,7 +8,7 @@ export const useChatStore = create((set) => ({
   chatId: null,
   user: null,
   isCurrentUserBlocked: false,
-  isRecieverBlocked: false,
+  isReceiverBlocked: false,
   changeChat: (chatId, user) => {
     const currentUser = useUserStore.getState().currentUser;
 
@@ -17,25 +17,25 @@ export const useChatStore = create((set) => ({
         chatId,
         user: null,
         isCurrentUserBlocked: true,
-        isRecieverBlocked: false,
+        isReceiverBlocked: false,
       });
     } else if (currentUser.blocked.includes(user.id)) {
       return set({
         chatId,
         user: user,
         isCurrentUserBlocked: false,
-        isRecieverBlocked: true,
+        isReceiverBlocked: true,
       });
     } else {
       return set({
         chatId,
         user,
         isCurrentUserBlocked: false,
-        isRecieverBlocked: false,
+        isReceiverBlocked: false,
       });
     }
   },
   changeBlock: () => {
-    set((state) => ({ ...state, isRecieverBlocked: !state.isRecieverBlocked }));
+    set((state) => ({ ...state, isReceiverBlocked: !state.isReceiverBlocked }));
   },
 }));
