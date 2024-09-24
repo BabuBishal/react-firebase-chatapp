@@ -158,7 +158,7 @@ const Chat = () => {
             <div className="texts">
               {message.img && (
                 <img
-                  src="https://images.pexels.com/photos/6243239/pexels-photo-6243239.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  src={message.img}
                   alt=""
                 />
               )}
